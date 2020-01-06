@@ -8,8 +8,12 @@
 </template>
 
 <script>
+import emitter from "@/mixins/emitter"
 import Schema from "async-validator";
 export default {
+  name: 'kFromItem',
+  componentName: 'kFromItem',
+  mixins: [emitter],
   inject: ["form"],
   props: {
     label: {
@@ -30,6 +34,9 @@ export default {
       console.log(res);
       this.validate();
     });
+    if (this.prop) {
+      this.dispatch("kFrom", "kkb.form.addField", [this])
+    }
   },
   methods: {
     validate() {

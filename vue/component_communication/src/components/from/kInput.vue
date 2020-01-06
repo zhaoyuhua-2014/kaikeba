@@ -7,9 +7,11 @@
 </template>
 
 <script>
+import emitter from "@/mixins/emitter"
 export default {
   // 设置inheritAttrs 为false 避免设置到根元素上面
   inheritAttrs: false,
+  mixins: [emitter],
   props: {
     type: {
       type: String,
@@ -25,12 +27,10 @@ export default {
       // 派发一个emit事件
       this.$emit("input", e.target.value);
       // 通知父级执行校验
-      //   if () {
-
-      //   }
-        this.$parent.$emit("validate");
+      // this.$parent.$emit("validate");
       //   console.log(this.$parent)
       // this.send()
+      this.dispatch('kFromItem', 'validate')
     },
     send() {
       let target = this.$parent;

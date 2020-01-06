@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <heading :title="title">{{title}}</heading>
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+<script>
+    // 没有管理任何状态，也没有监听任何传递给它的状态，也没有生命周期方法。实际上，它只是一个接受一些 prop 的函数。
+    // 在这样的场景下，我们可以将组件标记为 functional，这意味它无状态(没有响应式数据) ，也没有实例(没有 this 上下文) 。
+    Vue.component('heading', {
+        // 函数式组件
+        functional: true,
+        props: {
+            level: {
+                type: String,
+                default: '1'
+            },
+            title: {
+                type: String,
+                default: ''
+            }
+        },
+        // 组件需要的一切都是通过 context 参数传递，它是一个包括如下字段的对象：
+        // props：提供所有 prop 的对象
+        // children: VNode 子节点的数组
+        // slots: 一个函数，返回了包含所有插槽的对象
+        // scopedSlots: (2.6.0+) 一个暴露传入的作用域插槽的对象。也以函数形式暴露普通插槽。
+        // data：传递给组件的整个数据对象，作为 createElement 的第二个参数传入组件
+        // parent：对父组件的引用
+        // listeners: (2.3.0 +) 一个包含了所有父组件为当前组件注册的事件监听器的对象。这是 data.on 的一个别名。
+        // injections: (2.3.0 +) 如果使用了 inject 选项，则该对象包含了应当被注入的属性。
+        render: function (h, context) {
+            // 构造子元素节点
+            let children = []
+            // 属性获取
+            const {title, level} = context.props;
+            console.log(context)
+            children = children.concat(context.children)
+            const vNode = h(
+                // 第一个参数
+                'h' + level,
+                // 第二个参数 一个与模板中属性对应的数据对象。可选。
+                {
+                    class: 'tit',
+                    attrs: {
+                        title: title
+                    }
+                },
+                // 第三个参数
+                // 子级虚拟节点 (VNodes)，由 `createElement()` 构建而成，
+                // 也可以使用字符串来生成“文本虚拟节点”。可选。
+                children
+            )
+            // snabbdom
+            return vNode
+        }
+    })
+    let app = new Vue({
+        el: "#app",
+        data() {
+            return {
+                title: '标题'
+            }
+        },
+    })
+</script>
+
+</html>
