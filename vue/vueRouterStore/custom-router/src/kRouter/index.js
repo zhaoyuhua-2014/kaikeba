@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from './kvue-router';
 import Home from "../ivew/home"
 import About from "../ivew/about"
+import AbouotA from "../ivew/about/view/a.vue"
+import AbouotB from "../ivew/about/view/b.vue"
 
 
 
@@ -13,6 +15,10 @@ const router = new VueRouter({
     mode: 'history',
     routes: [
         {
+            path: '',
+            redirect: '/home',
+        },
+        {
             path: '/home',
             name: 'home',
             component: Home
@@ -20,7 +26,22 @@ const router = new VueRouter({
         {
             path: '/about',
             name: 'about',
-            component: About
+            component: About,
+            childen: [
+                {
+                    path: '/',
+                    name
+                    component: AbouotA,
+                },
+                {
+                    path: '/about/a',
+                    component: AbouotA,
+                },
+                {
+                    path: '/about/a',
+                    component: AbouotB,
+                }
+            ]
         }
     ]
 })

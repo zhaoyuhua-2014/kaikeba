@@ -3,16 +3,3 @@
         <h4>home</h4>
    </div>
 </template>
-
-<script>
-export default {
-   name: '',
-   data() {
-       return {}
-   },
-  components: {}
-}
-</script>
-
-<style scoped lang="stylus">
-</style>
