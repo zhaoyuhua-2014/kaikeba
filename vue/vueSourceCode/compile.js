@@ -4,7 +4,7 @@
 class Compile {
     // el 宿主元素
     // vm 当前实例
-    constructor(el, vm){
+    constructor(el, vm) {
         this.$el = document.querySelector(el)
         this.$vm = vm
 
@@ -12,9 +12,9 @@ class Compile {
             this.compile(this.$el)
         }
     }
-    compile(el){
+    compile(el) {
         const childNodes = el.childNodes
-        Array.from(childNodes).forEach(node =>{
+        Array.from(childNodes).forEach(node => {
             if (this.isElement(node)) {
                 console.log("是元素")
                 console.log(node)
@@ -27,43 +27,55 @@ class Compile {
             }
         })
     }
-    isElement(node){
+    isElement(node) {
         return node.nodeType === 1
     }
-    isInter(node){
+    isInter(node) {
         return node.nodeType === 3 && /\{\{(.*)\}\}/.test(node.textContent)
     }
-    compileElement(node){
+    compileElement(node) {
         let attrs = node.attributes
         console.log(attrs)
         if (attrs.length) {
             Array.from(attrs).forEach(attr => {
                 let attrName = attr.name
                 let attrVal = attr.value
+                
                 if (this.isDirective(attrName)) {
                     const dir = attrName.substring(2)
                     this[dir] = this[dir](node, attrVal)
                 }
+                if (this.isEvent(attrName)) {
+                    console.log(attrName, attrVal)
+                    const eventName = attrName.substring(1)
+                    console.log(eventName)
+                    this[eventName] = this[eventName](node, attrName)
+                }
             })
         }
     }
-    isDirective(name){
+    // 检测时指令
+    isDirective(name) {
         return name.indexOf('k-') === 0
+    }
+    // 检测是事件
+    isEvent(name) {
+        return name.indexOf('@') === 0
     }
     compileText(node) {
         this.updata(node, RegExp.$1, 'text')
     }
-    text(node,exp){
+    text(node, exp) {
         this.updata(node, exp, 'text')
     }
     html(node, exp) {
         this.updata(node, exp, 'html')
     }
-    updata(node, exp, dir){
+    updata(node, exp, dir) {
         const fn = this[dir + "Updater"]
         fn && fn(node, this.$vm[exp])
 
-        new Watcher(this.$vm, exp , function (val) {
+        new Watcher(this.$vm, exp, function (val) {
             console.log('312')
             fn && fn(node, val)
         })
@@ -74,8 +86,8 @@ class Compile {
     htmlUpdater(node, val) {
         node.innerHTML = val
     }
-    on(node,val){
-        node.add
+    click(node, eventName) {
+        node.addEventListener('click', eventName)
     }
 }
 // 创建观察者
@@ -93,22 +105,22 @@ class Watcher {
         // console.log(this.$vm[key])
         Dep.Target = null
     }
-    updata(){
+    updata() {
         this.$updataFn.call(this.$vm, this.$vm[this.$key])
     }
 }
 // dep 依赖收集
 
 class Dep {
-    constructor(){
+    constructor() {
         this.deps = []
     }
-    addDep(dep){
+    addDep(dep) {
         this.deps.push(dep)
     }
-    notify(){
+    notify() {
         console.log('notify')
         console.log(this.deps)
-        this.deps.forEach( dep => dep.updata())
+        this.deps.forEach(dep => dep.updata())
     }
 }

@@ -12,7 +12,7 @@
     <div id="app">
         <h1 >{{count}}</h1>
         <h1 k-text="count"></h1>
-        <div k-html="desc"></div>
+        <div k-html="desc" @click="add"></div>
     </div>
 </body>
 <script src="./compile.js"></script>
@@ -23,6 +23,11 @@
         data: {
             count: 0,
             desc: '<div>123</div>'
+        },
+        methods: {
+            add(){
+                console.log('addddddddddddddddddddddddddd')
+            }
         }
     })
     console.log(app)
