@@ -29,11 +29,6 @@ const router = new VueRouter({
             component: About,
             childen: [
                 {
-                    path: '/',
-                    name
-                    component: AbouotA,
-                },
-                {
                     path: '/about/a',
                     component: AbouotA,
                 },

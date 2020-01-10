@@ -11,24 +11,35 @@ class VueRouter {
         let routes = options.routes
         this.hasMap = new Map()
 
-        this.mapDate.bind(this, routes)
+        this.mapDate.call(this, routes)
         // obj: Object,
         // key: string,
         // val: any,
         // customSetter ? : ? Function,
         // shallow ? : boolean
-        let a = window.location.hash.slice(1) || '';
-        if (!a) {
-            a = routes[0].redirect
+        console.log(this.hasMap)
+        console.log(window.location.hash)
+        if (window.location.hash) {
+            let a = window.location.hash.slice(1) || '';
+            console.log(a)
+            if (!a) {
+                a = routes[0].redirect
+            }
+            Vue.util.defineReactive(this, 'current', a)
+        } else {
+            window.location.replace('/#/')
+            Vue.util.defineReactive(this, 'current')
         }
-        Vue.util.defineReactive(this, 'current', a)
+        
+        
         window.addEventListener('load', this.onHashChange.bind(this))
         window.addEventListener('hashchange', this.onHashChange.bind(this))
         
     }
     onHashChange() {
         console.log(window.location.hash)
-        this.current = window.location.hash.slice(1)
+        let hash = window.location.hash
+        this.current = hash ? hash.slice(1) : ''
     }
     // 递归处理map映射表
     mapDate(arr) {
@@ -42,6 +53,7 @@ class VueRouter {
                 return this.mapDate(item.children)
             }
         })
+        console.log(this.hasMap)
     }
 }
 VueRouter.install = function (_Vue) {
