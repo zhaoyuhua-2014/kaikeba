@@ -31,17 +31,20 @@ extend(Vue.options.directives, platformDirectives)
 extend(Vue.options.components, platformComponents)
 
 // install platform patch function
+// 指定补丁方法：传入虚拟dom转为真是dom
 Vue.prototype.__patch__ = inBrowser ? patch : noop
 
 // public mount method
+// 实现$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
   el = el && inBrowser ? query(el) : undefined
+  // 初始化：将首次渲染结果替换el
   return mountComponent(this, el, hydrating)
 }
-
+// 定义全局的钩子
 // devtools global hook
 /* istanbul ignore next */
 if (inBrowser) {
